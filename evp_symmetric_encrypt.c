@@ -7,8 +7,13 @@
         10MB and 100MB of data              * 2
         encoding and decoding               * 2 = 72 configurations (Some configurations not covered by Camellia ~ 32 total)
 */
-
 int main (void)
+{
+    int retVal;
+    retVal = execute();
+}
+
+int execute (void)
 {
 
     // unsigned char *key   - Define a "pointer" called key of type "unsigned char" 

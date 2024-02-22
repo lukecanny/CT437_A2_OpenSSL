@@ -23,6 +23,7 @@
 #                   Function Prototypes                    #
 ############################################################
 */
+int execute(void);
 void handleErrors(void);
 int encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,
             unsigned char *iv, unsigned char *ciphertext, const EVP_CIPHER * cipher_mode);
