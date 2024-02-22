@@ -77,6 +77,9 @@ int execute (const EVP_CIPHER * cipher_mode, unsigned char * plaintext, unsigned
     /* Buffer for the decrypted text */
     unsigned char decryptedtext[128];
 
+    /* Buffer for Authentication Tag (GCM) */
+    unsigned char tag[16];
+
     /* Plaintext / Ciphertext Length */
     int decryptedtext_len, ciphertext_len;
 
@@ -87,7 +90,7 @@ int execute (const EVP_CIPHER * cipher_mode, unsigned char * plaintext, unsigned
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &en_time_start);
     /* Encrypt the plaintext */
     ciphertext_len = encrypt (plaintext, strlen ((char *)plaintext), key, iv,
-                              ciphertext, cipher_mode);
+                              ciphertext, cipher_mode, tag);
     // Record end encryption time:
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &en_time_end);
 
@@ -99,7 +102,7 @@ int execute (const EVP_CIPHER * cipher_mode, unsigned char * plaintext, unsigned
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &de_time_start);
     /* Decrypt the ciphertext */
     decryptedtext_len = decrypt(ciphertext, ciphertext_len, key, iv,
-                                decryptedtext, cipher_mode);
+                                decryptedtext, cipher_mode, tag);
     // Finish recording decryption time:
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &de_time_end);
 
@@ -127,9 +130,10 @@ void handleErrors(void)
 }
 
 int encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,
-            unsigned char *iv, unsigned char *ciphertext, const EVP_CIPHER *cipher_mode)
+            unsigned char *iv, unsigned char *ciphertext, const EVP_CIPHER *cipher_mode,
+            unsigned char * tag)
 {
-
+    
     EVP_CIPHER_CTX *ctx;
 
     int len;
@@ -166,6 +170,13 @@ int encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,
         handleErrors();
     ciphertext_len += len;
 
+    /* 
+     * Store the Authentication Tag. Applies only for GCM mode.
+     * Used to decrypt, stored in tag variable.
+    */
+    if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_GET_TAG, 16, tag)) 
+        handleErrors();
+
     /* Clean up */
     EVP_CIPHER_CTX_free(ctx);
     return ciphertext_len;
@@ -173,7 +184,8 @@ int encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,
 
 
 int decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *key,
-            unsigned char *iv, unsigned char *plaintext, const EVP_CIPHER * cipher_mode)
+            unsigned char *iv, unsigned char *plaintext, const EVP_CIPHER * cipher_mode,
+            unsigned char * tag)
 {
     EVP_CIPHER_CTX *ctx;
 
@@ -202,6 +214,13 @@ int decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *key,
     if(1 != EVP_DecryptUpdate(ctx, plaintext, &len, ciphertext, ciphertext_len))
         handleErrors();
     plaintext_len = len;
+
+    /* 
+     * Set the Authentication Tag. Applies only for GCM mode.
+     * Tag was stored when encrypting.
+    */
+    if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, 16, tag)) 
+        handleErrors();
 
     /*
      * Finalise the decryption. Further plaintext bytes may be written at
