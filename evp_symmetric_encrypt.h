@@ -10,9 +10,9 @@
 #include <openssl/evp.h>
 #include <openssl/err.h>
 #include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+// #include <stdio.h>
+// #include <stdlib.h>
+#include <linux/time.h>
 
 /*
 ############################################################

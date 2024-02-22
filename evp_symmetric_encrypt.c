@@ -41,29 +41,39 @@ int main (void)
     /* Struct for Time Recordings */
     struct timespec en_time_start, en_time_end, de_time_start, de_time_end;
 
-    // Start recording encryption time:
+    // Record start encryption time:
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &en_time_start);
     /* Encrypt the plaintext */
     ciphertext_len = encrypt (plaintext, strlen ((char *)plaintext), key, iv,
                               ciphertext);
-    // Finish recording encryption time:
+    // Record end encryption time:
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &en_time_end);
 
     // /* Do something useful with the ciphertext here */
     // printf("Ciphertext is:\n");
     // BIO_dump_fp (stdout, (const char *)ciphertext, ciphertext_len);
 
     // Begin recording decryption time:
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &de_time_start);
     /* Decrypt the ciphertext */
     decryptedtext_len = decrypt(ciphertext, ciphertext_len, key, iv,
                                 decryptedtext);
     // Finish recording decryption time:
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &de_time_end);
 
-    /* Add a NULL terminator. We are expecting printable text */
-    decryptedtext[decryptedtext_len] = '\0';
+    // /* Add a NULL terminator. We are expecting printable text */
+    // decryptedtext[decryptedtext_len] = '\0';
 
-    /* Show the decrypted text */
-    printf("Decrypted text is:\n");
-    printf("%s\n", decryptedtext);
+    // /* Show the decrypted text */
+    // printf("Decrypted text is:\n");
+    // printf("%s\n", decryptedtext);
+    double encryption_time = (en_time_end.tv_sec - en_time_start.tv_sec) +
+                          (en_time_end.tv_nsec - en_time_start.tv_nsec) / 1e9;
+
+    double decryption_time = (de_time_end.tv_sec - de_time_start.tv_sec) +
+                          (de_time_end.tv_nsec - de_time_start.tv_nsec) / 1e9;
+
+    printf("%d, %d", encryption_time, decryption_time);
 
     return 0;
 }
