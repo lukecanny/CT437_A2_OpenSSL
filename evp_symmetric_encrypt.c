@@ -10,10 +10,13 @@
 int main (void)
 {
     int retVal;
-    retVal = execute();
+    for (int i = 0; i < 100; i++){
+        retVal = execute((const EVP_CIPHER *) EVP_aes_256_cbc());
+    }
+
 }
 
-int execute (void)
+int execute (const EVP_CIPHER * cipher_mode)
 {
 
     // unsigned char *key   - Define a "pointer" called key of type "unsigned char" 
@@ -24,7 +27,7 @@ int execute (void)
         // the string "01234567890123456789012345678901" is obviously much bigger
         // What does unsigned char * as a type cast mean
     /* Cipher Mode */
-    const EVP_CIPHER * cipher_mode = EVP_aes_256_cbc();
+    //const EVP_CIPHER * cipher_mode = EVP_aes_256_cbc();
 
     /* A 256 bit key */
     unsigned char *key = (unsigned char *)"01234567890123456789012345678901";
@@ -80,8 +83,7 @@ int execute (void)
     double decryption_time = (de_time_end.tv_sec - de_time_start.tv_sec) +
                           (de_time_end.tv_nsec - de_time_start.tv_nsec) / 1e9;
 
-    printf("%f, %f", encryption_time, decryption_time);
-
+    printf("\n%f, %f", encryption_time, decryption_time);
     return 0;
 }
 
@@ -95,7 +97,7 @@ void handleErrors(void)
 int encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,
             unsigned char *iv, unsigned char *ciphertext, const EVP_CIPHER *cipher_mode)
 {
-    
+
     EVP_CIPHER_CTX *ctx;
 
     int len;
@@ -134,7 +136,6 @@ int encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,
 
     /* Clean up */
     EVP_CIPHER_CTX_free(ctx);
-
     return ciphertext_len;
 }
 
@@ -180,6 +181,5 @@ int decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *key,
 
     /* Clean up */
     EVP_CIPHER_CTX_free(ctx);
-
     return plaintext_len;
 }

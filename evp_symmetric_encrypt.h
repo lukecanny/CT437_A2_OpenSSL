@@ -10,7 +10,8 @@
 #include <openssl/evp.h>
 #include <openssl/err.h>
 #include <string.h>
-// #include <stdio.h>
+#include <stdio.h>
+#include <unistd.h>
 // #include <stdlib.h>
 #include <time.h>
 
@@ -23,7 +24,7 @@
 #                   Function Prototypes                    #
 ############################################################
 */
-int execute(void);
+int execute(const EVP_CIPHER * cipher_mode);
 void handleErrors(void);
 int encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,
             unsigned char *iv, unsigned char *ciphertext, const EVP_CIPHER * cipher_mode);
