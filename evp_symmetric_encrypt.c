@@ -63,8 +63,23 @@ int main (void)
     for (int i = 0; i < 100; i++)
         retVal = execute((const EVP_CIPHER *) EVP_aria_256_gcm(), plaintext, key256, iv128);
     printf("\nARIA_256_ECB");
+    // Camellia
+    printf("\nCamellia_128_CBC");
+    for (int i = 0; i < 100; i++)
+        retVal = execute((const EVP_CIPHER *) EVP_camellia_128_cbc(), plaintext, key128, iv128);
+    printf("\nCamellia_128_ECB");
+    for (int i = 0; i < 100; i++)
+        retVal = execute((const EVP_CIPHER *) EVP_camellia_128_ecb(), plaintext, key128, iv128);
+    printf("\nCamellia_256_CBC");
+    for (int i = 0; i < 100; i++)
+        retVal = execute((const EVP_CIPHER *) EVP_camellia_256_cbc(), plaintext, key256, iv128);
+    printf("\nCamellia_256_ECB");
+    for (int i = 0; i < 100; i++)
+        retVal = execute((const EVP_CIPHER *) EVP_camellia_256_ecb(), plaintext, key256, iv128);
 
-    // printf("\nARIA_256_GCM");
+
+
+    
 
     
 
