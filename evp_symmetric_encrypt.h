@@ -24,7 +24,7 @@
 #                   Function Prototypes                    #
 ############################################################
 */
-int execute(const EVP_CIPHER * cipher_mode);
+int execute(const EVP_CIPHER * cipher_mode, unsigned char * plaintext, unsigned char * key, unsigned char * iv);
 void handleErrors(void);
 int encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,
             unsigned char *iv, unsigned char *ciphertext, const EVP_CIPHER * cipher_mode);

@@ -9,14 +9,45 @@
 */
 int main (void)
 {
+
+    // int key_lengths[] = {128, 256};
+    // const char *algorithms[] = {"AES", "ARIA", "Camellia"};
+    unsigned char *key256 = (unsigned char *)"01234567890123456789012345678901";   // 256 bit key
+    unsigned char *key128 = (unsigned char *)"0123456789012345";                   // 128 bit key
+
+    unsigned char *iv128 = (unsigned char *)"0123456789012345";                    // 128 bit IV
+    unsigned char *iv96 = (unsigned char *)"012345678901";                         // 96 bit IV (for GCM mode)
+
+    unsigned char *plaintext = (unsigned char *)"The quick brown fox jumps over the lazy dog";
+
     int retVal;
-    for (int i = 0; i < 100; i++){
-        retVal = execute((const EVP_CIPHER *) EVP_aes_256_cbc());
-    }
+    // for (int i = 0; i < 3; i++)
+    //     retVal = execute((const EVP_CIPHER *) EVP_aes_256_cbc(), plaintext, key256, iv128);
+    // printf("\nTestStart");
+
+
+    // // AES
+    // printf("\nAES_256_CBC");
+    // for (int i = 0; i < 100; i++)
+    //     retVal = execute((const EVP_CIPHER *) EVP_aes_256_cbc(), plaintext, key256, iv128);
+    // printf("\nAES_256_ECB");
+    // for (int i = 0; i < 100; i++)
+    //     retVal = execute((const EVP_CIPHER *) EVP_aes_256_ecb(), plaintext, key256, iv128);
+    printf("\nAES_256_GCM");
+    for (int i = 0; i < 100; i++)
+        retVal = execute((const EVP_CIPHER *) EVP_aes_256_gcm(), plaintext, key256, iv96);
+    // ARIA
+    printf("\nARIA_256_CBC");
+
+    printf("\nARIA_256_ECB");
+
+    printf("\nARIA_256_GCM");
+
+    
 
 }
 
-int execute (const EVP_CIPHER * cipher_mode)
+int execute (const EVP_CIPHER * cipher_mode, unsigned char * plaintext, unsigned char * key, unsigned char * iv)
 {
 
     // unsigned char *key   - Define a "pointer" called key of type "unsigned char" 
@@ -30,14 +61,15 @@ int execute (const EVP_CIPHER * cipher_mode)
     //const EVP_CIPHER * cipher_mode = EVP_aes_256_cbc();
 
     /* A 256 bit key */
-    unsigned char *key = (unsigned char *)"01234567890123456789012345678901";
+    // unsigned char *key = (unsigned char *)"01234567890123456789012345678901";
 
     /* A 128 bit IV */
-    unsigned char *iv = (unsigned char *)"0123456789012345";
+    // unsigned char *iv = (unsigned char *)"0123456789012345";
+    // 012345678901
 
     /* Message to be encrypted */
-    unsigned char *plaintext =
-        (unsigned char *)"The quick brown fox jumps over the lazy dog";
+    // unsigned char *plaintext =
+    //     (unsigned char *)"The quick brown fox jumps over the lazy dog";
 
     /* Buffer for ciphertext. */
     unsigned char ciphertext[128];
@@ -90,7 +122,7 @@ int execute (const EVP_CIPHER * cipher_mode)
 
 void handleErrors(void)
 {
-    ERR_print_errors_fp(stderr);
+    ERR_print_errors_fp(stdout);
     abort();
 }
 
