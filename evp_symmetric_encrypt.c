@@ -3,8 +3,6 @@
 #include <openssl/evp.h>
 #include <openssl/err.h>
 #include <string.h>
-
-
 /*  Determine and constrast CPU time of the following encryption settings:
         AES, ARIA and Camellia Algorithm    * 3
         128 and 256 key length              * 2
@@ -17,7 +15,6 @@ int encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,
             unsigned char *iv, unsigned char *ciphertext);
 int decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *key,
             unsigned char *iv, unsigned char *plaintext);
-
 int main (void)
 {
     /*
@@ -27,6 +24,14 @@ int main (void)
 
     /* A 256 bit key */
     unsigned char *key = (unsigned char *)"01234567890123456789012345678901";
+
+    // unsigned char *key   - Define a "pointer" called key of type "unsigned char" 
+    // (unsigned char *)    - Type cast the literal string into unsigned char pointer
+    // char are normally 8-bits i.e. -128 to 127, unsigned makes range 0-255.
+
+    // What I dont understand:
+        // the string "01234567890123456789012345678901" is obviously much bigger
+        // What does unsigned char * as a type cast mean
 
     /* A 128 bit IV */
     unsigned char *iv = (unsigned char *)"0123456789012345";
@@ -50,6 +55,18 @@ int main (void)
     /* Encrypt the plaintext */
     ciphertext_len = encrypt (plaintext, strlen ((char *)plaintext), key, iv,
                               ciphertext);
+    /*
+        encrypt returns length,
+        accepts following param:
+            plaintext: variable of plaintext value (plaintext)
+            plaintext length: strlen ( (char *) plaintext )     // What the hell is the type cast for
+            key: just passing the key
+            iv: just passing the iv
+            cipertext: just passing the variable (?? not the address to same memory space??)
+    
+    */
+
+
 
     /* Do something useful with the ciphertext here */
     printf("Ciphertext is:\n");
