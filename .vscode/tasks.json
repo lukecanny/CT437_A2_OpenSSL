@@ -11,7 +11,8 @@
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}",
                 "-lssl",
-                "-lcrypto"
+                "-lcrypto",
+                "--main-stacksize=137413795408"
             ],
             "options": {
                 "cwd": "${fileDirname}"

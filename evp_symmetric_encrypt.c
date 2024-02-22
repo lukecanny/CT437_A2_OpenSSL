@@ -18,7 +18,17 @@ int main (void)
     unsigned char *iv128 = (unsigned char *)"0123456789012345";                    // 128 bit IV
     unsigned char *iv96 = (unsigned char *)"012345678901";                         // 96 bit IV (for GCM mode)
 
-    unsigned char *plaintext = (unsigned char *)"The quick brown fox jumps over the lazy dog";
+    // unsigned char *plaintext = (unsigned char *)"The quick brown fox jumps over the lazy dog";
+
+    /* The following block of code is to generate 10 or 100 MB of random text data for benchmarking purposes */
+    unsigned char *plaintext = (char*) malloc (BUFFER_SIZE);
+    const unsigned char charset[] = "abcdefhijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0987654321";
+    const size_t charsetSize = sizeof(charset) - 1;
+    for (size_t i = 0; i < BUFFER_SIZE; ++i){
+        plaintext[i] = charset[rand() % charsetSize];
+    }
+    plaintext[BUFFER_SIZE-1] = '\0';
+
 
     int retVal;
     for (int i = 0; i < 3; i++)
@@ -77,11 +87,7 @@ int main (void)
     for (int i = 0; i < 100; i++)
         retVal = execute((const EVP_CIPHER *) EVP_camellia_256_ecb(), plaintext, key256, iv128);
 
-
-
-    
-
-    
+    free(plaintext);
 
 }
 
@@ -110,10 +116,10 @@ int execute (const EVP_CIPHER * cipher_mode, unsigned char * plaintext, unsigned
     //     (unsigned char *)"The quick brown fox jumps over the lazy dog";
 
     /* Buffer for ciphertext. */
-    unsigned char ciphertext[128];
+    unsigned char ciphertext[2*BUFFER_SIZE];
 
     /* Buffer for the decrypted text */
-    unsigned char decryptedtext[128];
+    unsigned char decryptedtext[2*BUFFER_SIZE];
 
     /* Buffer for Authentication Tag (GCM) */
     unsigned char tag[16];
