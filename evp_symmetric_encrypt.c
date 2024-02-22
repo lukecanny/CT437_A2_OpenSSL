@@ -21,27 +21,50 @@ int main (void)
     unsigned char *plaintext = (unsigned char *)"The quick brown fox jumps over the lazy dog";
 
     int retVal;
-    // for (int i = 0; i < 3; i++)
-    //     retVal = execute((const EVP_CIPHER *) EVP_aes_256_cbc(), plaintext, key256, iv128);
-    // printf("\nTestStart");
-
-
-    // // AES
-    // printf("\nAES_256_CBC");
-    // for (int i = 0; i < 100; i++)
-    //     retVal = execute((const EVP_CIPHER *) EVP_aes_256_cbc(), plaintext, key256, iv128);
-    // printf("\nAES_256_ECB");
-    // for (int i = 0; i < 100; i++)
-    //     retVal = execute((const EVP_CIPHER *) EVP_aes_256_ecb(), plaintext, key256, iv128);
+    for (int i = 0; i < 3; i++)
+        retVal = execute((const EVP_CIPHER *) EVP_aes_256_cbc(), plaintext, key256, iv128);
+    printf("\nTestStart");
+    // AES
+    printf("\nAES_128_CBC");
+    for (int i = 0; i < 100; i++)
+        retVal = execute((const EVP_CIPHER *) EVP_aes_128_cbc(), plaintext, key128, iv128);
+    printf("\nAES_128_ECB");
+    for (int i = 0; i < 100; i++)
+        retVal = execute((const EVP_CIPHER *) EVP_aes_128_ecb(), plaintext, key128, iv128);
+    printf("\nAES_128_GCM");
+    for (int i = 0; i < 100; i++)
+        retVal = execute((const EVP_CIPHER *) EVP_aes_128_gcm(), plaintext, key128, iv128);
+    printf("\nAES_256_CBC");
+    for (int i = 0; i < 100; i++)
+        retVal = execute((const EVP_CIPHER *) EVP_aes_256_cbc(), plaintext, key256, iv128);
+    printf("\nAES_256_ECB");
+    for (int i = 0; i < 100; i++)
+        retVal = execute((const EVP_CIPHER *) EVP_aes_256_ecb(), plaintext, key256, iv128);
     printf("\nAES_256_GCM");
     for (int i = 0; i < 100; i++)
-        retVal = execute((const EVP_CIPHER *) EVP_aes_256_gcm(), plaintext, key256, iv96);
-    // ARIA
+        retVal = execute((const EVP_CIPHER *) EVP_aes_256_gcm(), plaintext, key256, iv128);
+    // // ARIA
+    printf("\nARIA_128_CBC");
+    for (int i = 0; i < 100; i++)
+        retVal = execute((const EVP_CIPHER *) EVP_aria_128_cbc(), plaintext, key128, iv128);
+    printf("\nARIA_128_ECB");
+    for (int i = 0; i < 100; i++)
+        retVal = execute((const EVP_CIPHER *) EVP_aria_128_ecb(), plaintext, key128, iv128);
+    printf("\nARIA_128_GCM");
+    for (int i = 0; i < 100; i++)
+        retVal = execute((const EVP_CIPHER *) EVP_aria_128_gcm(), plaintext, key128, iv128);
     printf("\nARIA_256_CBC");
-
+    for (int i = 0; i < 100; i++)
+        retVal = execute((const EVP_CIPHER *) EVP_aria_256_cbc(), plaintext, key256, iv128);
+    printf("\nARIA_256_ECB");
+    for (int i = 0; i < 100; i++)
+        retVal = execute((const EVP_CIPHER *) EVP_aria_256_ecb(), plaintext, key256, iv128);
+    printf("\nARIA_256_GCM");
+    for (int i = 0; i < 100; i++)
+        retVal = execute((const EVP_CIPHER *) EVP_aria_256_gcm(), plaintext, key256, iv128);
     printf("\nARIA_256_ECB");
 
-    printf("\nARIA_256_GCM");
+    // printf("\nARIA_256_GCM");
 
     
 
