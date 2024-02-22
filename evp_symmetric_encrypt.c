@@ -73,7 +73,7 @@ int main (void)
     double decryption_time = (de_time_end.tv_sec - de_time_start.tv_sec) +
                           (de_time_end.tv_nsec - de_time_start.tv_nsec) / 1e9;
 
-    printf("%d, %d", encryption_time, decryption_time);
+    printf("%f, %f", encryption_time, decryption_time);
 
     return 0;
 }

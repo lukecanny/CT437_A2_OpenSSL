@@ -12,8 +12,12 @@
 #include <string.h>
 // #include <stdio.h>
 // #include <stdlib.h>
-#include <linux/time.h>
+#include <time.h>
 
+// Define CLOCK_PROCESS_CPUTIME_ID for IntelliSense only
+#ifndef CLOCK_PROCESS_CPUTIME_ID
+#define CLOCK_PROCESS_CPUTIME_ID 15
+#endif
 /*
 ############################################################
 #                   Function Prototypes                    #
