@@ -1,8 +1,5 @@
 #include "evp_symmetric_encrypt.h"
-#include <openssl/conf.h>
-#include <openssl/evp.h>
-#include <openssl/err.h>
-#include <string.h>
+
 /*  Determine and constrast CPU time of the following encryption settings:
         AES, ARIA and Camellia Algorithm    * 3
         128 and 256 key length              * 2
@@ -10,11 +7,7 @@
         10MB and 100MB of data              * 2
         encoding and decoding               * 2 = 72 configurations (Some configurations not covered by Camellia ~ 32 total)
 */
-void handleErrors(void);
-int encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,
-            unsigned char *iv, unsigned char *ciphertext);
-int decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *key,
-            unsigned char *iv, unsigned char *plaintext);
+
 int main (void)
 {
     /*
