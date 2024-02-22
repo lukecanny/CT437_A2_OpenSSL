@@ -18,6 +18,8 @@ int main (void)
     // What I dont understand:
         // the string "01234567890123456789012345678901" is obviously much bigger
         // What does unsigned char * as a type cast mean
+    /* Cipher Mode */
+    const EVP_CIPHER * cipher_mode = EVP_aes_256_cbc();
 
     /* A 256 bit key */
     unsigned char *key = (unsigned char *)"01234567890123456789012345678901";
@@ -45,7 +47,7 @@ int main (void)
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &en_time_start);
     /* Encrypt the plaintext */
     ciphertext_len = encrypt (plaintext, strlen ((char *)plaintext), key, iv,
-                              ciphertext);
+                              ciphertext, cipher_mode);
     // Record end encryption time:
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &en_time_end);
 
@@ -57,7 +59,7 @@ int main (void)
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &de_time_start);
     /* Decrypt the ciphertext */
     decryptedtext_len = decrypt(ciphertext, ciphertext_len, key, iv,
-                                decryptedtext);
+                                decryptedtext, cipher_mode);
     // Finish recording decryption time:
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &de_time_end);
 
@@ -86,8 +88,9 @@ void handleErrors(void)
 }
 
 int encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,
-            unsigned char *iv, unsigned char *ciphertext)
+            unsigned char *iv, unsigned char *ciphertext, const EVP_CIPHER *cipher_mode)
 {
+    
     EVP_CIPHER_CTX *ctx;
 
     int len;
@@ -105,7 +108,7 @@ int encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,
      * IV size for *most* modes is the same as the block size. For AES this
      * is 128 bits
      */
-    if(1 != EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv))
+    if(1 != EVP_EncryptInit_ex(ctx, cipher_mode, NULL, key, iv))
         handleErrors();
 
     /*
@@ -132,7 +135,7 @@ int encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,
 
 
 int decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *key,
-            unsigned char *iv, unsigned char *plaintext)
+            unsigned char *iv, unsigned char *plaintext, const EVP_CIPHER * cipher_mode)
 {
     EVP_CIPHER_CTX *ctx;
 
@@ -151,7 +154,7 @@ int decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *key,
      * IV size for *most* modes is the same as the block size. For AES this
      * is 128 bits
      */
-    if(1 != EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv))
+    if(1 != EVP_DecryptInit_ex(ctx, cipher_mode, NULL, key, iv))
         handleErrors();
 
     /*
