@@ -8,8 +8,8 @@
 
 void main (void)
 {
-    unsigned char *key = (unsigned char *)"856946"; 
-    unsigned char *iv = (unsigned char *)"73"; 
+    unsigned char *key = (unsigned char *)"856946"; // 24 bit key
+    unsigned char *iv = (unsigned char *)"73";      // 8-bit initaliation vector
 
     /* The following block of code is to generate 10 or 100 MB of random text data for benchmarking purposes */
     unsigned char *plaintext = (char*) malloc (BUFFER_SIZE);
@@ -23,7 +23,12 @@ void main (void)
     // All the functions implemented below are exactly the same as part 1.
     printf("\nDES_EBE3_ECB");
     for (int i = 0; i < 100; i++)
-        retVal = execute((const EVP_CIPHER *) EVP_des_ede3_ecb(), plaintext, key, iv);
+        execute((const EVP_CIPHER *) EVP_des_ede3_ecb(), plaintext, key, iv);
+
+    prinf("\nDES_EBE3_CBC");
+    for (int i = 0; i < 100; i++)
+        execute((const EVP_CIPHER *) EVP_des_ede3_cbc(), plaintext, key, iv);
+
 }
 
 int execute (const EVP_CIPHER * cipher_mode, unsigned char * plaintext, unsigned char * key, unsigned char * iv)
