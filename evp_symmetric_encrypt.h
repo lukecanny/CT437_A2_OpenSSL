@@ -1,5 +1,5 @@
-#ifndef evp_symmetric_encrypt_h
-#define evp_symmetric_encrypt_h
+#ifndef EVP_SYMMETRIC_ENCRYPT_H
+#define EVP_SYMMETRIC_ENCRYPT_H
 
 /*
 ############################################################
