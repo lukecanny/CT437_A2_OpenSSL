@@ -28,7 +28,7 @@ void main (void)
     for (int i = 0; i < 10; i++)
         execute((const EVP_CIPHER *) EVP_des_ede3_ecb(), plaintext, key, iv);
 
-    prinf("\nDES_EBE3_CBC");
+    printf("\nDES_EBE3_CBC");
     for (int i = 0; i < 10; i++)
         execute((const EVP_CIPHER *) EVP_des_ede3_cbc(), plaintext, key, iv);
 
