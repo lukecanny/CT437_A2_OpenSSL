@@ -22,3 +22,16 @@ In this section, Triple-DES is implemented using OpenSSL's DES API with support 
 
 ## Results:
 
+### Problem 1
+
+<img src="pictures/problem_1_graph.png" alt="Plot of Results from Problem 1" width="600"/>
+
+
+### Problem 2
+
+|                   | 100MB ARIA 128bit CBC* | 100MB ECB Triple DES | 100MB CBC Triple DES |
+|------------------:|:---------------------:|:---------------------:|:---------------------:|
+| Encryption        | 120.83 ms             | 5057.68 ms            | 4993.18 ms            |
+| Decryption        | 115.90 ms             | 4945.63 ms            | 4805.77 ms            |
+
+*ARIA 128-bit CBC was the highest CPU time observed in section P1.
