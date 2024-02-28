@@ -21,12 +21,15 @@ void main (void)
     plaintext[BUFFER_SIZE-1] = '\0';
 
     // All the functions implemented below are exactly the same as part 1.
+    for (int i = 0; i < 2; i++)
+        execute((const EVP_CIPHER *) EVP_des_ede3_ecb(), plaintext, key, iv);
+    printf("\nTest Start");
     printf("\nDES_EBE3_ECB");
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 10; i++)
         execute((const EVP_CIPHER *) EVP_des_ede3_ecb(), plaintext, key, iv);
 
     prinf("\nDES_EBE3_CBC");
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 10; i++)
         execute((const EVP_CIPHER *) EVP_des_ede3_cbc(), plaintext, key, iv);
 
 }
