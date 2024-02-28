@@ -1,6 +1,7 @@
 {
     "files.associations": {
-        "evp.h": "c"
+        "evp.h": "c",
+        "triple_des_encrypt.h": "c"
     },
     "C_Cpp.default.compilerPath": "/usr/bin/gcc"
 }
