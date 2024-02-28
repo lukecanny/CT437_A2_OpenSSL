@@ -1,24 +1,19 @@
 #include "evp_symmetric_encrypt.h"
 
 /*  Determine and constrast CPU time of the following encryption settings:
-        AES, ARIA and Camellia Algorithm    * 3
-        128 and 256 key length              * 2
-        ECB, CBC and GCM mode               * 3
-        10MB and 100MB of data              * 2
-        encoding and decoding               * 2 = 72 configurations (Some configurations not covered by Camellia ~ 32 total)
+ *       AES, ARIA and Camellia Algorithm    
+ *       128 and 256 key length              
+ *       ECB, CBC and GCM mode               
+ *       10MB and 100MB of data              
+ *       encoding and decoding               
 */
 int main (void)
 {
 
-    // int key_lengths[] = {128, 256};
-    // const char *algorithms[] = {"AES", "ARIA", "Camellia"};
     unsigned char *key256 = (unsigned char *)"01234567890123456789012345678901";   // 256 bit key
     unsigned char *key128 = (unsigned char *)"0123456789012345";                   // 128 bit key
 
     unsigned char *iv128 = (unsigned char *)"0123456789012345";                    // 128 bit IV
-    unsigned char *iv96 = (unsigned char *)"012345678901";                         // 96 bit IV (for GCM mode)
-
-    // unsigned char *plaintext = (unsigned char *)"The quick brown fox jumps over the lazy dog";
 
     /* The following block of code is to generate 10 or 100 MB of random text data for benchmarking purposes */
     unsigned char *plaintext = (char*) malloc (BUFFER_SIZE);
@@ -29,12 +24,18 @@ int main (void)
     }
     plaintext[BUFFER_SIZE-1] = '\0';
 
-
+    /* 
+     * The first results produced are when program starts are excessively high for any 
+     * algorithm, therefore we discard the first 3 recordings 
+     */
     int retVal;
     for (int i = 0; i < 3; i++)
         retVal = execute((const EVP_CIPHER *) EVP_aes_256_cbc(), plaintext, key256, iv128);
     printf("\nTestStart");
-    // AES
+    
+    /* For each configuration, run the execute (benchmarking) function 100 times */
+
+    /* AES */
     printf("\nAES_128_CBC");
     for (int i = 0; i < 100; i++)
         retVal = execute((const EVP_CIPHER *) EVP_aes_128_cbc(), plaintext, key128, iv128);
@@ -53,7 +54,8 @@ int main (void)
     printf("\nAES_256_GCM");
     for (int i = 0; i < 100; i++)
         retVal = execute((const EVP_CIPHER *) EVP_aes_256_gcm(), plaintext, key256, iv128);
-    // // ARIA
+    
+    /* ARIA */
     printf("\nARIA_128_CBC");
     for (int i = 0; i < 100; i++)
         retVal = execute((const EVP_CIPHER *) EVP_aria_128_cbc(), plaintext, key128, iv128);
@@ -72,8 +74,8 @@ int main (void)
     printf("\nARIA_256_GCM");
     for (int i = 0; i < 100; i++)
         retVal = execute((const EVP_CIPHER *) EVP_aria_256_gcm(), plaintext, key256, iv128);
-    printf("\nARIA_256_ECB");
-    // Camellia
+
+    /* Camellia */
     printf("\nCamellia_128_CBC");
     for (int i = 0; i < 100; i++)
         retVal = execute((const EVP_CIPHER *) EVP_camellia_128_cbc(), plaintext, key128, iv128);
@@ -87,6 +89,7 @@ int main (void)
     for (int i = 0; i < 100; i++)
         retVal = execute((const EVP_CIPHER *) EVP_camellia_256_ecb(), plaintext, key256, iv128);
 
+    /* Free Memory */
     free(plaintext);
 
 }
@@ -94,37 +97,13 @@ int main (void)
 int execute (const EVP_CIPHER * cipher_mode, unsigned char * plaintext, unsigned char * key, unsigned char * iv)
 {
 
-    // unsigned char *key   - Define a "pointer" called key of type "unsigned char" 
-    // (unsigned char *)    - Type cast the literal string into unsigned char pointer
-    // char are normally 8-bits i.e. -128 to 127, unsigned makes range 0-255.
-
-    // What I dont understand:
-        // the string "01234567890123456789012345678901" is obviously much bigger
-        // What does unsigned char * as a type cast mean
-    /* Cipher Mode */
-    //const EVP_CIPHER * cipher_mode = EVP_aes_256_cbc();
-
-    /* A 256 bit key */
-    // unsigned char *key = (unsigned char *)"01234567890123456789012345678901";
-
-    /* A 128 bit IV */
-    // unsigned char *iv = (unsigned char *)"0123456789012345";
-    // 012345678901
-
-    /* Message to be encrypted */
-    // unsigned char *plaintext =
-    //     (unsigned char *)"The quick brown fox jumps over the lazy dog";
-
     /* Buffer for ciphertext. */
-    // unsigned char ciphertext[BUFFER_SIZE+16];
     unsigned char *ciphertext = (unsigned char*)malloc(BUFFER_SIZE+16);
 
     /* Buffer for the decrypted text */
-    // unsigned char decryptedtext[BUFFER_SIZE];
     unsigned char *decryptedtext = (unsigned char*)malloc(BUFFER_SIZE);
 
     /* Buffer for Authentication Tag (GCM) */
-    // unsigned char tag[16];
     unsigned char *tag = (unsigned char*)malloc(16);
 
     /* Plaintext / Ciphertext Length */
@@ -141,7 +120,7 @@ int execute (const EVP_CIPHER * cipher_mode, unsigned char * plaintext, unsigned
     // Record end encryption time:
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &en_time_end);
 
-    // /* Do something useful with the ciphertext here */
+    // /* Print the Ciphertext */
     // printf("Ciphertext is:\n");
     // BIO_dump_fp (stdout, (const char *)ciphertext, ciphertext_len);
 
@@ -159,14 +138,18 @@ int execute (const EVP_CIPHER * cipher_mode, unsigned char * plaintext, unsigned
     // /* Show the decrypted text */
     // printf("Decrypted text is:\n");
     // printf("%s\n", decryptedtext);
+
+    /* Calculate the Encryption and Decryption times */
     double encryption_time = (en_time_end.tv_sec - en_time_start.tv_sec) +
                           (en_time_end.tv_nsec - en_time_start.tv_nsec) / 1e9;
 
     double decryption_time = (de_time_end.tv_sec - de_time_start.tv_sec) +
                           (de_time_end.tv_nsec - de_time_start.tv_nsec) / 1e9;
 
+    /* Print results in CSV format (encrypt, decrypt)*/
     printf("\n%f, %f", encryption_time, decryption_time);
 
+    /* Free Memory */
     free(ciphertext);
     free(decryptedtext);
 
@@ -184,7 +167,7 @@ int encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,
             unsigned char *iv, unsigned char *ciphertext, const EVP_CIPHER *cipher_mode,
             unsigned char * tag)
 {
-    
+    /* Create Cipher Context */
     EVP_CIPHER_CTX *ctx;
 
     int len;

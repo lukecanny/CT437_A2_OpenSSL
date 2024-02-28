@@ -3,7 +3,6 @@
 /*
  * Implement Triple-DES from scratch using OpenSSL's DES API and make 
  * it support both CBC and ECB mode using 100 MB input.
-
 */
 
 void main (void)
@@ -20,9 +19,15 @@ void main (void)
     }
     plaintext[BUFFER_SIZE-1] = '\0';
 
-    // All the functions implemented below are exactly the same as part 1.
+    /* All the functions implemented below are exactly the same as part 1. 
+     * Due to poor performance, only 10 runs per configuration (approx 5000ms per operation)
+    */
+
+    /* Discard first 3 recordings */
     for (int i = 0; i < 2; i++)
         execute((const EVP_CIPHER *) EVP_des_ede3_ecb(), plaintext, key, iv);
+    
+    /* Run Tests - Triple DES in ECB and CBC mode */
     printf("\nTest Start");
     printf("\nDES_EBE3_ECB");
     for (int i = 0; i < 10; i++)
@@ -36,27 +41,6 @@ void main (void)
 
 int execute (const EVP_CIPHER * cipher_mode, unsigned char * plaintext, unsigned char * key, unsigned char * iv)
 {
-
-    // unsigned char *key   - Define a "pointer" called key of type "unsigned char" 
-    // (unsigned char *)    - Type cast the literal string into unsigned char pointer
-    // char are normally 8-bits i.e. -128 to 127, unsigned makes range 0-255.
-
-    // What I dont understand:
-        // the string "01234567890123456789012345678901" is obviously much bigger
-        // What does unsigned char * as a type cast mean
-    /* Cipher Mode */
-    //const EVP_CIPHER * cipher_mode = EVP_aes_256_cbc();
-
-    /* A 256 bit key */
-    // unsigned char *key = (unsigned char *)"01234567890123456789012345678901";
-
-    /* A 128 bit IV */
-    // unsigned char *iv = (unsigned char *)"0123456789012345";
-    // 012345678901
-
-    /* Message to be encrypted */
-    // unsigned char *plaintext =
-    //     (unsigned char *)"The quick brown fox jumps over the lazy dog";
 
     /* Buffer for ciphertext. */
     // unsigned char ciphertext[BUFFER_SIZE+16];
@@ -84,7 +68,7 @@ int execute (const EVP_CIPHER * cipher_mode, unsigned char * plaintext, unsigned
     // Record end encryption time:
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &en_time_end);
 
-    // /* Do something useful with the ciphertext here */
+    // /* Print Ciphertext */
     // printf("Ciphertext is:\n");
     // BIO_dump_fp (stdout, (const char *)ciphertext, ciphertext_len);
 
@@ -102,6 +86,8 @@ int execute (const EVP_CIPHER * cipher_mode, unsigned char * plaintext, unsigned
     // /* Show the decrypted text */
     // printf("Decrypted text is:\n");
     // printf("%s\n", decryptedtext);
+
+    /* Calculate encryption and decryption time */
     double encryption_time = (en_time_end.tv_sec - en_time_start.tv_sec) +
                           (en_time_end.tv_nsec - en_time_start.tv_nsec) / 1e9;
 
@@ -110,6 +96,7 @@ int execute (const EVP_CIPHER * cipher_mode, unsigned char * plaintext, unsigned
 
     printf("\n%f, %f", encryption_time, decryption_time);
 
+    /* Free Memory */
     free(ciphertext);
     free(decryptedtext);
 

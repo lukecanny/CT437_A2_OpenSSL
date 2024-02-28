@@ -14,12 +14,14 @@
 #include <unistd.h>
 #include <time.h>
 
-#define BUFFER_SIZE 104857600 // 100 MB Block Size
+/*
+############################################################
+#                   Constant Definition                    #
+############################################################
+*/
 
-// Define CLOCK_PROCESS_CPUTIME_ID for IntelliSense only
-#ifndef CLOCK_PROCESS_CPUTIME_ID
-#define CLOCK_PROCESS_CPUTIME_ID 15
-#endif
+/* 100 MB Buffer Size */
+#define BUFFER_SIZE 104857600
 
 /*
 ############################################################

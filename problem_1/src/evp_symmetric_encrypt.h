@@ -14,13 +14,15 @@
 #include <unistd.h>
 #include <time.h>
 
-// Define CLOCK_PROCESS_CPUTIME_ID for IntelliSense only
-#ifndef CLOCK_PROCESS_CPUTIME_ID
-#define CLOCK_PROCESS_CPUTIME_ID 15
-#endif
+/*
+############################################################
+#                   Constant Definition                    #
+############################################################
+*/
 
-// #define BUFFER_SIZE 10485760    // 10mb
-#define BUFFER_SIZE 104857600   // 100MB
+/* 100MB (10485760 for 10MB) */
+#define BUFFER_SIZE 104857600   
+
 /*
 ############################################################
 #                   Function Prototypes                    #
@@ -38,7 +40,5 @@ int encrypt(unsigned char * plaintext, int plaintext_len, unsigned char * key,
 int decrypt(unsigned char * ciphertext, int ciphertext_len, unsigned char * key,
             unsigned char * iv, unsigned char * plaintext, const EVP_CIPHER * cipher_mode,
             unsigned char * tag);
-
-
 
 #endif
