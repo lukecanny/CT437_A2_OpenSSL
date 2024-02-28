@@ -8,7 +8,104 @@
 
 void main (void)
 {
-    // Main Function
+    unsigned char *key = (unsigned char *)"856946"; 
+    unsigned char *iv = (unsigned char *)"73"; 
+
+    /* The following block of code is to generate 10 or 100 MB of random text data for benchmarking purposes */
+    unsigned char *plaintext = (char*) malloc (BUFFER_SIZE);
+    const unsigned char charset[] = "abcdefhijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0987654321";
+    const size_t charsetSize = sizeof(charset) - 1;
+    for (size_t i = 0; i < BUFFER_SIZE; ++i){
+        plaintext[i] = charset[rand() % charsetSize];
+    }
+    plaintext[BUFFER_SIZE-1] = '\0';
+
+    // All the functions implemented below are exactly the same as part 1.
+    printf("\nDES_EBE3_ECB");
+    for (int i = 0; i < 100; i++)
+        retVal = execute((const EVP_CIPHER *) EVP_des_ede3_ecb(), plaintext, key, iv);
+}
+
+int execute (const EVP_CIPHER * cipher_mode, unsigned char * plaintext, unsigned char * key, unsigned char * iv)
+{
+
+    // unsigned char *key   - Define a "pointer" called key of type "unsigned char" 
+    // (unsigned char *)    - Type cast the literal string into unsigned char pointer
+    // char are normally 8-bits i.e. -128 to 127, unsigned makes range 0-255.
+
+    // What I dont understand:
+        // the string "01234567890123456789012345678901" is obviously much bigger
+        // What does unsigned char * as a type cast mean
+    /* Cipher Mode */
+    //const EVP_CIPHER * cipher_mode = EVP_aes_256_cbc();
+
+    /* A 256 bit key */
+    // unsigned char *key = (unsigned char *)"01234567890123456789012345678901";
+
+    /* A 128 bit IV */
+    // unsigned char *iv = (unsigned char *)"0123456789012345";
+    // 012345678901
+
+    /* Message to be encrypted */
+    // unsigned char *plaintext =
+    //     (unsigned char *)"The quick brown fox jumps over the lazy dog";
+
+    /* Buffer for ciphertext. */
+    // unsigned char ciphertext[BUFFER_SIZE+16];
+    unsigned char *ciphertext = (unsigned char*)malloc(BUFFER_SIZE+16);
+
+    /* Buffer for the decrypted text */
+    // unsigned char decryptedtext[BUFFER_SIZE];
+    unsigned char *decryptedtext = (unsigned char*)malloc(BUFFER_SIZE);
+
+    /* Buffer for Authentication Tag (GCM) */
+    // unsigned char tag[16];
+    unsigned char *tag = (unsigned char*)malloc(16);
+
+    /* Plaintext / Ciphertext Length */
+    int decryptedtext_len, ciphertext_len;
+
+    /* Struct for Time Recordings */
+    struct timespec en_time_start, en_time_end, de_time_start, de_time_end;
+
+    // Record start encryption time:
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &en_time_start);
+    /* Encrypt the plaintext */
+    ciphertext_len = encrypt (plaintext, strlen ((char *)plaintext), key, iv,
+                              ciphertext, cipher_mode, tag);
+    // Record end encryption time:
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &en_time_end);
+
+    // /* Do something useful with the ciphertext here */
+    // printf("Ciphertext is:\n");
+    // BIO_dump_fp (stdout, (const char *)ciphertext, ciphertext_len);
+
+    // Begin recording decryption time:
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &de_time_start);
+    /* Decrypt the ciphertext */
+    decryptedtext_len = decrypt(ciphertext, ciphertext_len, key, iv,
+                                decryptedtext, cipher_mode, tag);
+    // Finish recording decryption time:
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &de_time_end);
+
+    // /* Add a NULL terminator. We are expecting printable text */
+    // decryptedtext[decryptedtext_len] = '\0';
+
+    // /* Show the decrypted text */
+    // printf("Decrypted text is:\n");
+    // printf("%s\n", decryptedtext);
+    double encryption_time = (en_time_end.tv_sec - en_time_start.tv_sec) +
+                          (en_time_end.tv_nsec - en_time_start.tv_nsec) / 1e9;
+
+    double decryption_time = (de_time_end.tv_sec - de_time_start.tv_sec) +
+                          (de_time_end.tv_nsec - de_time_start.tv_nsec) / 1e9;
+
+    printf("\n%f, %f", encryption_time, decryption_time);
+
+    free(ciphertext);
+    free(decryptedtext);
+
+    return 0;
 }
 
 void handleErrors(void)
