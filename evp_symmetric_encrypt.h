@@ -19,7 +19,8 @@
 #define CLOCK_PROCESS_CPUTIME_ID 15
 #endif
 
-#define BUFFER_SIZE 10485760 // 10mb
+// #define BUFFER_SIZE 10485760    // 10mb
+#define BUFFER_SIZE 104857600   // 100MB
 /*
 ############################################################
 #                   Function Prototypes                    #
