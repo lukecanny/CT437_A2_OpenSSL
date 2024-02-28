@@ -116,13 +116,16 @@ int execute (const EVP_CIPHER * cipher_mode, unsigned char * plaintext, unsigned
     //     (unsigned char *)"The quick brown fox jumps over the lazy dog";
 
     /* Buffer for ciphertext. */
-    unsigned char ciphertext[2*BUFFER_SIZE];
+    // unsigned char ciphertext[BUFFER_SIZE+16];
+    unsigned char *ciphertext = (unsigned char*)malloc(BUFFER_SIZE+16);
 
     /* Buffer for the decrypted text */
-    unsigned char decryptedtext[2*BUFFER_SIZE];
+    // unsigned char decryptedtext[BUFFER_SIZE];
+    unsigned char *decryptedtext = (unsigned char*)malloc(BUFFER_SIZE);
 
     /* Buffer for Authentication Tag (GCM) */
-    unsigned char tag[16];
+    // unsigned char tag[16];
+    unsigned char *tag = (unsigned char*)malloc(16);
 
     /* Plaintext / Ciphertext Length */
     int decryptedtext_len, ciphertext_len;
@@ -163,13 +166,17 @@ int execute (const EVP_CIPHER * cipher_mode, unsigned char * plaintext, unsigned
                           (de_time_end.tv_nsec - de_time_start.tv_nsec) / 1e9;
 
     printf("\n%f, %f", encryption_time, decryption_time);
+
+    free(ciphertext);
+    free(decryptedtext);
+
     return 0;
 }
 
 
 void handleErrors(void)
 {
-    ERR_print_errors_fp(stdout);
+    ERR_print_errors_fp(stderr);
     abort();
 }
 
